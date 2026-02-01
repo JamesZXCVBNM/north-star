@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Valentine?</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: #ffe6f0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        h1 {
+            color: #d72660;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+        }
+        .buttons {
+            display: flex;
+            gap: 30px;
+        }
+        button {
+            padding: 15px 35px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+        #yesBtn {
+            background: #ffb3c6;
+            color: #d72660;
+        }
+        #yesBtn:hover {
+            background: #d72660;
+            color: #fff;
+        }
+        #noBtn {
+            background: #fff;
+            color: #d72660;
+            border: 2px solid #d72660;
+        }
+        #noBtn.moving {
+            position: absolute;
+        }
+        #cuteMsg {
+            margin-top: 40px;
+            font-size: 2rem;
+            color: #d72660;
+            display: none;
+            animation: pop 0.5s;
+        }
+        @keyframes pop {
+            0% { transform: scale(0.7); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Will you be my valentine?</h1>
+    <div class="buttons">
+        <button id="yesBtn">Yes</button>
+        <button id="noBtn">No</button>
+    </div>
+    <div id="cuteMsg">Yay! 💖 You made my day! 💖</div>
+   
+    <script>
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        const cuteMsg = document.getElementById('cuteMsg');
+
+        let moving = false;
+        function moveNoBtn() {
+            if (!moving) return;
+            const padding = 20;
+            const btnWidth = noBtn.offsetWidth;
+            const btnHeight = noBtn.offsetHeight;
+            const winWidth = window.innerWidth;
+            const winHeight = window.innerHeight;
+            // Get current position
+            let currentLeft = parseFloat(noBtn.style.left) || noBtn.getBoundingClientRect().left;
+            let currentTop = parseFloat(noBtn.style.top) || noBtn.getBoundingClientRect().top;
+            // Calculate a new position nearby (within 100px in any direction, but not overlapping)
+            let deltaX = (Math.random() - 0.5) * 200; // -100 to +100
+            let deltaY = (Math.random() - 0.5) * 200; // -100 to +100
+            // Ensure the button moves at least 60px away in either direction
+            if (Math.abs(deltaX) < btnWidth + 20) deltaX = (deltaX < 0 ? -1 : 1) * (btnWidth + 20);
+            if (Math.abs(deltaY) < btnHeight + 20) deltaY = (deltaY < 0 ? -1 : 1) * (btnHeight + 20);
+            let newLeft = currentLeft + deltaX;
+            let newTop = currentTop + deltaY;
+            // Clamp to window
+            newLeft = Math.max(padding, Math.min(winWidth - btnWidth - padding, newLeft));
+            newTop = Math.max(padding, Math.min(winHeight - btnHeight - padding, newTop));
+            noBtn.style.left = newLeft + 'px';
+            noBtn.style.top = newTop + 'px';
+        }
+
+        noBtn.addEventListener('mouseenter', function startMoving() {
+            if (!moving) {
+                moving = true;
+                noBtn.classList.add('moving');
+                moveNoBtn();
+            }
+        });
+        noBtn.addEventListener('mouseenter', moveNoBtn);
+        noBtn.addEventListener('click', moveNoBtn); // Just in case
+        window.addEventListener('resize', moveNoBtn);
+
+        yesBtn.addEventListener('click', () => {
+            cuteMsg.style.display = 'block';
+            document.getElementById('videoContainer').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
